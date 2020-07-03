@@ -44,15 +44,10 @@ k3d delete cluster gitpod || true
 docker stop nginx-proxy || true
 
 
-echo "Creating docker network ..."
-docker network create -d bridge k3d || true
-
-
 # GitLab
 echo "Installing GitLab cluster ..."
 
 k3d create cluster \
-    --network k3d \
     -p 1443:443@loadbalancer \
     --k3s-server-arg --disable=traefik \
     --switch \
@@ -83,7 +78,6 @@ echo "Installing Gitpod cluster ..."
 
 mkdir -p /tmp/workspaces
 k3d create cluster \
-    --network k3d \
     -p 2443:443@loadbalancer \
     -v /tmp/workspaces:/var/gitpod/workspaces:shared \
     --k3s-server-arg --disable=traefik \
@@ -150,7 +144,6 @@ docker run --rm --name nginx-proxy \
     -v "$ROOT_DIR/proxy/default.conf:/etc/nginx/conf.d/default.conf" \
     -v "$CERTS/fullchain.pem:/etc/nginx/certs/fullchain.pem" \
     -v "$CERTS/privkey.pem:/etc/nginx/certs/privkey.pem" \
-    --network k3d \
     -p 0.0.0.0:443:443 -d nginx
 
 echo "Done."
