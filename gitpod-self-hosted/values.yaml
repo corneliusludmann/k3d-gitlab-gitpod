@@ -1,0 +1,35 @@
+gitpod:
+  hostname: gitpod.example.com
+
+  certificatesSecret:
+    secretName: proxy-config-certificates
+    path: secrets/https-certificates/*
+
+  components:
+    workspace:
+      template:
+        spec:
+          dnsConfig: null
+          dnsPolicy: ClusterFirst
+          # use these values if you would like to configure a specific DNS server:
+          # dnsConfig:
+          #   nameservers:
+          #   - 10.0.0.1
+          # dnsPolicy: None
+
+  authProviders:
+  - id: "Local GitLab"
+    host: "gitlab.example.com"
+    protocol: "https"
+    type: "GitLab"
+    oauth:
+      clientId: "2ce8bfb95d9a1e0ed305427f35e10a6bdd1eef090b1890c68e5f8370782d05ee"
+      clientSecret: "a5447d23643f7e71353d9fc3ad1c15464c983c47f6eb2e80dd37de28152de05e"
+      callBackUrl: "https://gitpod.example.com/auth/gitlab/callback"
+      settingsUrl: "gitlab.example.com/profile/applications"
+
+  installPodSecurityPolicies: true
+
+gitpod_selfhosted:
+  variants:
+    customCerts: true

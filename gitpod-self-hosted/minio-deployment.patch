@@ -1,0 +1,28 @@
+diff -ur gitpod/charts/minio/templates/deployment.yaml gitpod_patched/charts/minio/templates/deployment.yaml
+--- gitpod/charts/minio/templates/deployment.yaml	2020-05-06 15:02:22.000000000 +0200
++++ gitpod_patched/charts/minio/templates/deployment.yaml	2020-07-02 10:21:11.000000000 +0200
+@@ -108,7 +108,7 @@
+ {{ toYaml .Values.extraArgs | indent 12 }}
+           {{- end  }}
+           volumeMounts:
+-            {{- if and .Values.persistence.enabled (not .Values.gcsgateway.enabled) (not .Values.azuregateway.enabled) (not .Values.s3gateway.enabled) (not .Values.b2gateway.enabled) }}
++            {{- if .Values.persistence.enabled }}
+             - name: export
+               mountPath: {{ .Values.mountPath }}
+               {{- if .Values.persistence.subPath }}
+@@ -189,7 +189,6 @@
+ {{ toYaml . | indent 8 }}
+ {{- end }}
+       volumes:
+-        {{- if and ((not .Values.gcsgateway.enabled) (not .Values.azuregateway.enabled) (not .Values.s3gateway.enabled) (not .Values.b2gateway.enabled)) }}
+         - name: export
+         {{- if .Values.persistence.enabled }}
+           persistentVolumeClaim:
+@@ -197,7 +196,6 @@
+         {{- else }}
+           emptyDir: {}
+         {{- end }}
+-        {{- end }}
+         - name: minio-user
+           secret:
+             secretName: {{ if .Values.existingSecret }}{{ .Values.existingSecret }}{{ else }}{{ template "minio.fullname" . }}{{ end }}
